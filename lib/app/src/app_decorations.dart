@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'app_colors.dart';
 
 class AppDecorations {
   static BoxDecoration gradientDecoration = const BoxDecoration(
