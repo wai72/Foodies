@@ -15,22 +15,22 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-Features
-Category Management:
+# Features
+# Category Management:
 Displays a list of food categories.
 Dynamically fetches and updates food items based on selected categories.
-Phone Number Validation:
+# Phone Number Validation:
 Validates user input with regex patterns.
 Dynamically enables/disables the "Continue" button based on the validity of the phone number.
-Smooth Navigation:
-Utilizes GetX routing for effortless screen transitions.
-Dialog Integration:
+
+# Dialog Integration:
 Handles user input through a custom dialog with validation and state updates.
-Modern UI:
+
+# Modern UI:
 Designed with a clean and responsive user interface.
 Uses SVG icons, banners, and images to enhance visual appeal.
 
-Technologies Used
+# Technologies Used
 Flutter Framework
 Dart Programming Language
 GetX Package
