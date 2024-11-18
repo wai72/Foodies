@@ -42,7 +42,8 @@ class _SuccessViewState extends State<SuccessView> {
               height: AppSpacing.xl,
             ),
             OutlinedButton(
-              onPressed: () {},
+              onPressed: () {  Navigator.pop(context);Navigator.pop(context);
+                          },
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.redColor,
                 side: const BorderSide(width: 1, color: AppColors.redColor),

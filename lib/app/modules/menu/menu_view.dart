@@ -1,10 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:foodie/app/controllers/category_controller.dart';
 import 'package:foodie/app/modules/otp/otp_view.dart';
 import 'package:foodie/app/src/app_colors.dart';
-
-import '../../data/remote/api_client.dart';
+import 'package:get/get.dart';
 import '../../src/app_spacings.dart';
 
 class MenuView extends StatefulWidget {
@@ -16,47 +15,11 @@ class MenuView extends StatefulWidget {
 
 class _MenuViewState extends State<MenuView> {
   final TextEditingController _phoneController = TextEditingController();
+      final controller = Get.put(CategoryController());
+
   String? _errorMessage;
-  String? _apiErrorMessage;
 
   bool _isEnableContinue = false;
-  late ApiClient _apiClient;
-  List<Category> _categories = [];
-
-  @override
-  void initState() {
-    super.initState();
-    final dio = Dio();
-    dio.interceptors.add(
-        LogInterceptor(requestBody: true, responseBody: true)); // Add logging
-    _apiClient =
-        ApiClient(dio, baseUrl: "https://www.themealdb.com/api/json/v1/1/");
-
-    _apiClient = ApiClient(dio);
-    _fetchCategories();
-  }
-
-  @override
-  void dispose() {
-    _phoneController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _fetchCategories() async {
-    try {
-      final response = await _apiClient.getCategories();
-      print("object$response");
-      setState(() {
-        _categories = response.categories;
-        print("object:$_categories");
-      });
-    } catch (e) {
-      setState(() {
-        _apiErrorMessage = "Failed to load categories: ${e.toString()}";
-        print("$_apiErrorMessage");
-      });
-    }
-  }
 
   void _validatePhoneNumber() {
     String phoneNumber = _phoneController.text;
@@ -116,45 +79,25 @@ class _MenuViewState extends State<MenuView> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: AppSpacing.d),
                 child: SizedBox(
-                  height: 60,
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        width: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: AppColors.strokeColor, // Border color
-                            width: 1, // Border width
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(AppSpacing.xs),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                "assets/icons/icon_category.png",
-                                width: 28,
-                                height: 28,
-                              ),
-                              const Text(
-                                "Yogurt",
-                                style: TextStyle(
-                                    color: AppColors.greyColor, fontSize: 10),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                  height: 100,
+                  child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: controller.categories.length,
+                itemBuilder: (context, index) {
+                  final category = controller.categories[index];
+                  return GestureDetector(
+                    onTap: () {
+                      controller.fetchFoods(category.name);
                     },
-                    itemCount: 10,
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const SizedBox(
-                      width: AppSpacing.xs,
+                    child: Column(
+                      children: [
+                        Image.network(category.thumbnail, height: 50),
+                        Text(category.name),
+                      ],
                     ),
-                  ),
+                  );
+                },
+              ),
                 ),
               ),
               ListView.separated(
