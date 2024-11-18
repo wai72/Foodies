@@ -31,11 +31,11 @@ Designed with a clean and responsive user interface.
 Uses SVG icons, banners, and images to enhance visual appeal.
 
 # Technologies Used
-Flutter Framework
-Dart Programming Language
-GetX Package
-State management
-Dependency injection
-Navigation and routing
-Dio for API handling
-Material Design Widgets
+## Flutter Framework
+## Dart Programming Language
+## GetX Package
+## State management
+## Dependency injection
+## Navigation and routing
+## Dio for API handling
+## Material Design Widgets
