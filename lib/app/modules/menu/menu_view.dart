@@ -17,24 +17,21 @@ class _MenuViewState extends State<MenuView> {
   final TextEditingController _phoneController = TextEditingController();
       final controller = Get.put(CategoryController());
 
-  String? _errorMessage;
-
-  bool _isEnableContinue = false;
+  final RxString _errorMessage = ''.obs;
+  final RxBool _isEnableContinue = false.obs;
 
   void _validatePhoneNumber() {
     String phoneNumber = _phoneController.text;
 
     final RegExp phoneRegex = RegExp(r'^(099\d{8}|99\d{8})$');
-
-    setState(() {
-      if (phoneRegex.hasMatch(phoneNumber)) {
-        _errorMessage = null;
-        _isEnableContinue = true;
-      } else {
-        _isEnableContinue = false;
-        _errorMessage = 'Please enter a phone number';
-      }
-    });
+if (phoneRegex.hasMatch(phoneNumber)) {
+      _errorMessage.value = '';
+      _isEnableContinue.value = true;
+      print(_isEnableContinue.value);
+    } else {
+      _isEnableContinue.value = false;
+      _errorMessage.value = 'Please enter a valid phone number';
+    }
   }
 
   @override
@@ -139,140 +136,146 @@ class _MenuViewState extends State<MenuView> {
                             )
                           ],
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return StatefulBuilder(
-                                      builder: (context, state) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: SizedBox(
-                                        width: 238,
-                                        height: 295,
-                                        child: Stack(
-                                          children: [
-                                            Positioned(
-                                              top: 4,
-                                              right: 4,
-                                              child: IconButton(
-                                                icon: SvgPicture.asset(
-                                                  'assets/icons/icon_circle_close.svg',
-                                                  width: 32,
-                                                  height: 32,
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: AppSpacing.l),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  const Text(
-                                                    "Phone Number",
-                                                    style: TextStyle(
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                  TextFormField(
-                                                    controller:
-                                                        _phoneController,
-                                                    onChanged: (value) {
-                                                      _validatePhoneNumber();
-                                                      setState(() {});
-                                                    },
-                                                    keyboardType:
-                                                        TextInputType.phone,
-                                                    decoration: InputDecoration(
-                                                      errorText: _errorMessage,
-                                                      hintText: "Phone",
-                                                      prefixIcon: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                vertical:
-                                                                    AppSpacing
-                                                                        .xs,
-                                                                horizontal:
-                                                                    AppSpacing
-                                                                        .l),
-                                                        child: SvgPicture.asset(
-                                                          "assets/icons/icon_phone.svg",
-                                                          width: 20,
-                                                          height: 20,
-                                                        ),
-                                                      ),
-                                                      border:
-                                                          const OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: AppColors
-                                                                .strokeColor),
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(2),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      backgroundColor:
-                                                          _isEnableContinue
-                                                              ? AppColors
-                                                                  .redColor
-                                                              : AppColors
-                                                                  .strokeColor,
-                                                    ),
-                                                    onPressed: _isEnableContinue
-                                                        ? () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          OtpView(
-                                                                            phoneNumber:
-                                                                                _phoneController.text,
-                                                                          )),
-                                                            );
-                                                          }
-                                                        : null,
-                                                    child: const Text(
-                                                      "CONTINUE",
-                                                      style: TextStyle(
-                                                          color: AppColors
-                                                              .whiteColor),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ],
+                          ElevatedButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return StatefulBuilder(
+                                        builder: (context, state) {
+                                      return Dialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
-                                      ),
-                                    );
+                                        child: SizedBox(
+                                          width: 238,
+                                          height: 295,
+                                          child: Stack(
+                                            children: [
+                                              Positioned(
+                                                top: 4,
+                                                right: 4,
+                                                child: IconButton(
+                                                  icon: SvgPicture.asset(
+                                                    'assets/icons/icon_circle_close.svg',
+                                                    width: 32,
+                                                    height: 32,
+                                                  ),
+                                                  onPressed: () {
+                                                    _phoneController.text='';
+                                                    _errorMessage.value = '';
+                                                    //_isEnableContinue.value = false;
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: AppSpacing.l),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    const Text(
+                                                      "Phone Number",
+                                                      style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                   Obx(() => TextFormField(
+                                                          controller:
+                                                              _phoneController,
+                                                          onChanged: (value) {
+                                                            _validatePhoneNumber();
+                                                          },
+                                                          keyboardType:
+                                                              TextInputType.phone,
+                                                          decoration: InputDecoration(
+                                                            errorText: _errorMessage.value,
+                                                            hintText: "Phone",
+                                                            prefixIcon: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      vertical:
+                                                                          AppSpacing
+                                                                              .xs,
+                                                                      horizontal:
+                                                                          AppSpacing
+                                                                              .l),
+                                                              child: SvgPicture.asset(
+                                                                "assets/icons/icon_phone.svg",
+                                                                width: 20,
+                                                                height: 20,
+                                                              ),
+                                                            ),
+                                                            border:
+                                                                const OutlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: AppColors
+                                                                      .strokeColor),
+                                                              borderRadius:
+                                                                  BorderRadius.all(
+                                                                Radius.circular(2),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                   ),
+                                                    
+                                                    Obx(() => ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          backgroundColor:
+                                                              _isEnableContinue.value
+                                                                  ? AppColors
+                                                                      .redColor
+                                                                  : AppColors
+                                                                      .strokeColor,
+                                                        ),
+                                                        onPressed: _isEnableContinue.value
+                                                            ? () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              OtpView(
+                                                                                phoneNumber:
+                                                                                    _phoneController.text,
+                                                                              )),
+                                                                );
+                                                              }
+                                                            : null,
+                                                        child: const Text(
+                                                          "CONTINUE",
+                                                          style: TextStyle(
+                                                              color: AppColors
+                                                                  .whiteColor),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
                                   });
-                                });
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.redColor),
-                          child: const Text(
-                            "Order Now",
-                            style: TextStyle(color: AppColors.whiteColor),
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.redColor),
+                            child: const Text(
+                              "Order Now",
+                              style: TextStyle(color: AppColors.whiteColor),
+                            ),
                           ),
-                        )
+                        
                       ],
                     );
                   },

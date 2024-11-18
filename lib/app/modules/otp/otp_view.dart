@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:foodie/app/controllers/category_controller.dart';
 import 'package:foodie/app/src/app_spacings.dart';
+import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../src/app_colors.dart';
 import '../success/success_view.dart';
@@ -17,8 +19,11 @@ class OtpView extends StatefulWidget {
 
 class _OtpViewState extends State<OtpView> {
   final TextEditingController _otpController = TextEditingController();
+  final controller = Get.put(CategoryController());
   late String receivedPhoneNumber;
-  bool _isEnableContinue = false;
+
+ final RxBool _isEnableContinue = false.obs;
+
   final String _validOtp = "123456";
   Timer? _timer;
   int _remainingTime = 10;
@@ -131,7 +136,7 @@ class _OtpViewState extends State<OtpView> {
                         length: 6,
                         validator: (otp) {
                           if (otp == _validOtp) {
-                            _isEnableContinue = true;
+                            _isEnableContinue.value = true;
                             _isCorrectOTP = true;
                           } else {
                             _isCorrectOTP = false;
@@ -154,7 +159,7 @@ class _OtpViewState extends State<OtpView> {
               const SizedBox(
                 height: AppSpacing.xs,
               ),
-              if ((!_isResend &&_isCorrectOTP)||(!_isEnableContinue))
+              if ((!_isResend &&_isCorrectOTP)||(!_isEnableContinue.value))
                 InkWell(
                   child: RichText(
                     text: const TextSpan(children: [
@@ -197,25 +202,26 @@ class _OtpViewState extends State<OtpView> {
                 ),
               const Spacer(),
               Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _isEnableContinue
-                        ? AppColors.redColor
-                        : AppColors.strokeColor,
-                  ),
-                  onPressed: _isEnableContinue
-                      ? () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SuccessView(),
-                            ),
-                          );
-                        }
-                      : null,
-                  child: const Text(
-                    "CONTINUE",
-                    style: TextStyle(color: AppColors.whiteColor),
+                child: Obx(() => ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: _isEnableContinue.value
+                          ? AppColors.redColor
+                          : AppColors.strokeColor,
+                    ),
+                    onPressed: _isEnableContinue.value
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SuccessView(),
+                              ),
+                            );
+                          }
+                        : null,
+                    child: const Text(
+                      "CONTINUE",
+                      style: TextStyle(color: AppColors.whiteColor),
+                    ),
                   ),
                 ),
               )
